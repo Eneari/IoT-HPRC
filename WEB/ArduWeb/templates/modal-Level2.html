@@ -1,0 +1,67 @@
+
+
+<!--   Modal-Level2    .................. -->
+
+
+
+<div class="modal fade" id="modal-Level2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog "  role="document">
+    <div class="modal-content"  style="width:660px;">
+      <!--Header-->
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel2"> descrizione </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body">
+
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>editar</th>
+              <th>código</th>
+              <th>descripción</th>
+              <th>valor</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for componente in componenti %}        
+
+            {% if  componente.livello == 2 %}
+            <tr>  
+              <th scope="row">
+                {% if componente.modifica %}
+                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"  
+                data-dismiss="modal"  data-target= "#modalEditForm--" 
+                onclick="modalEdit('{{componente.codice}}','{{componente.descrizione}}',
+                                   '{{componente.tipo}}','{{componente.gruppo_id}}');">
+                    <span class="fa fa-pencil"></span>
+                </button>                    
+                {% endif %}
+              
+              </th>
+              <td>{{componente.codice}}</td>
+              <td>{{componente.descrizione}}</td>
+              <td id="modal-{{componente.codice}}" data-tipo="{{componente.tipo}}"> </td>
+            </tr>
+            {% endif %}
+
+      
+            
+           {%endfor%}
+          </tbody>
+        </table>
+
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>

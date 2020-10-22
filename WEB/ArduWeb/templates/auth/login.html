@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main style="width: 450px;" role="main" class="container mt-3" align="center">
+ 
+
+<br>
+<h2 class="text-success " align="center">Log In</h2>
+<br>
+
+<div class="container mt-2">
+
+  <table class="table table-success table-bordered table-sm table-hover">
+
+    <form method="post">
+              
+        <thead class="thead-dark">
+            <tr>
+                <td>
+                  <label for="username">Username</label>
+                  <input name="username" id="username" required>
+                </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="submit" value="Log In">
+              </td>
+            </tr>
+
+    </form>
+  </table>
+</div>
+</main>
+
+{% endblock content %}

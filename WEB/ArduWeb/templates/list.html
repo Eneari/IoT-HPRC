@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+
+
+{% set ns = namespace(prova='uffaaaaa',prova2="paperibo", descrizione='') %}
+ 
+ {% block content %} 
+
+ 
+ 
+ <script src="{{ url_for('static', filename='js/paho-mqtt-min.js')  }}"  ></script>
+
+<!-- index page CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/arduweb-index.css') }}">
+
+<script src="{{ url_for('static', filename='js/arduweb.js')  }}"  ></script>
+
+{% block titolo %}
+<br>
+<h2 class="text-success " align="center">Resumen Agua Caliente Sanitaria</h2>
+{% endblock titolo %}
+
+<main style="width: 850px;" role="main" class="container mt-5" align="center">
+ 
+
+  <div class="container mt-3">
+    
+       
+         <div class="row">
+          <div class="col-12 mb-3">
+              <a class="btn btn-primary fa fa-image mr-2" href="/acs/schema" role="button"> Esquema</a>
+             
+          </div>      
+        </div>
+
+        {% for gruppo in gruppi %}
+        
+        <table class="table table-success table-bordered table-sm table-hover">
+            
+            <thead class="thead-dark">
+                <tr>
+                    <th>
+                    
+                    {% if gruppo.modifica %}
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"   data-target= "#modal-{{gruppo.id}}">
+                          <span class="fa fa-eye"></span>
+                        </button>                    
+                        {% endif %}  
+                   
+                    {{gruppo.descrizione}}
+                    </th>
+                    
+                    <th>
+                    
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+           
+             {% for componente in componenti %}
+           
+                {% if componente.gruppo_id == gruppo.id and componente.livello == 0 %}
+                 <tr>
+                   <td >{{componente.descrizione}}</td>
+                    
+                   {% if componente.tipo == "RADIO" %}
+                    <td id="{{componente.codice}}" align="center" data-tipo="{{componente.tipo}}" >
+                   
+                        <div class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" id="0-{{componente.codice}}"  class="custom-control-input" >
+                          <label id="label-0-{{componente.codice}}" class="custom-control-label" for="0-{{componente.codice}}"></label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="1-{{componente.codice}}"  class="custom-control-input" >
+                            <label id="label-1-{{componente.codice}}" class="custom-control-label" for="1-{{componente.codice}}"></label>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td id="{{componente.codice}}" align="center" data-tipo="{{componente.tipo}}">  </td>
+                   
+                   {% endif %}
+                </tr> 
+                {% endif %}
+                
+                 
+            {% endfor %}
+             </tbody>
+        </table>
+      
+        {% endfor %}
+        
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  
+{%for gruppo in gruppi%}
+  
+<!-- ...............Modal..................  -->
+<div class="modal fade" id="modal-{{gruppo.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog "  role="document">
+    <div class="modal-content"  style="width:660px;">
+      <!--Header-->
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">{{gruppo.descrizione}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body">
+
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>editar</th>
+              <th>código</th>
+              <th>descripción</th>
+              <th>valor</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for componente in componenti %}   
+
+            {% if componente.gruppo_id == gruppo.id  %}
+              
+                    
+                  {% if componente.livello == 1 %}
+                  <tr>  
+                    <th scope="row">
+                      
+                    
+                    {% if componente.modifica %}
+                      <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"  
+                          data-dismiss="modal"  data-target= "#modalEditForm--" 
+                          onclick="modalEdit('{{componente.codice}}','{{componente.descrizione}}',
+                                        '{{componente.tipo}}','{{componente.gruppo_id}}');">
+                          <span class="fa fa-pencil"></span>
+                      </button>     
+                      
+                    {% endif %}
+                    </th>
+                    <td>{{componente.codice}}</td>
+                    <td>{{componente.descrizione}}</td>
+                    <td id="modal-{{componente.codice}}" data-tipo="{{componente.tipo}}"> </td>
+                    </tr>
+                 
+                  {% endif %}
+                    
+                  {% if componente.livello == 2 %}
+                    <tr>  
+                      <th scope="row">
+                        
+
+                    {% if componente.modifica %}
+
+                      <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"  
+                        data-dismiss="modal"  data-target= "#modal-Level2-{{componente.sottogruppo_id}}" >
+                          
+                        <span class="fa fa-eye"></span>
+                      </button>   
+
+                    {% endif %}
+                    </th>
+                    <td>{{componente.codice}}</td>
+                    <td>{{componente.descrizione}}</td>
+                    <td id="modal-{{componente.codice}}" data-tipo="{{componente.tipo}}"> </td>
+                    </tr>
+
+                  {% endif %}
+                
+                
+            {% endif %}
+
+          {%endfor%}
+
+          </tbody>
+        </table>
+
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fine  Modal.................. -->
+
+{%endfor%}
+
+
+<!--   Modal-Level2    .................. -->
+
+{%for sottogruppo in sottogruppi%}
+
+<div class="modal fade" id="modal-Level2-{{sottogruppo.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog "  role="document">
+    <div class="modal-content"  style="width:660px;">
+      <!--Header-->
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel2"> {{sottogruppo.descrizione}}  </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body">
+
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>editar</th>
+              <th>código</th>
+              <th>descripción</th>
+              <th>valor</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for componente in componenti %}        
+
+            {% if  componente.livello == 3 and componente.sottogruppo_id == sottogruppo.id %}
+            <tr>  
+              <th scope="row">
+                {% if componente.modifica %}
+                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"  
+                data-dismiss="modal"  data-target= "#modalEditForm--" 
+                onclick="modalEdit('{{componente.codice}}','{{componente.descrizione}}',
+                                   '{{componente.tipo}}','{{componente.gruppo_id}}');">
+                    <span class="fa fa-pencil"></span>
+                </button>                    
+                {% endif %}
+              
+              </th>
+              <td>{{componente.codice}}</td>
+              <td>{{componente.descrizione}}</td>
+              <td id="modal-{{componente.codice}}" data-tipo="{{componente.tipo}}"> </td>
+            </tr>
+            {% endif %}
+
+      
+            
+           {%endfor%}
+          </tbody>
+        </table>
+
+      </div>
+      <!--Footer-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fine  Modal-Level2.................................. -->
+{%endfor%}
+
+{% include 'modalForm.html' %}
+
+    
+
+<script>
+
+
+/*==================== E D I T ================================================*/   
+function modalEdit(codice,descrizione,tipo,gruppo)   {
+        
+    document.getElementById("editFormCompo").innerHTML = codice; 
+    document.getElementById("editFormDescr").innerHTML = descrizione; 
+    document.getElementById("editFormGruppo").innerHTML = gruppo; 
+    valore = getValore(codice); 
+    
+    switch(tipo) {
+        case "TEMP":  
+            var stringa_html = '<input type="number" id="editFormValore" class="editFormInput" value="'+valore+'" > C°'
+            $( ".editFormInput span" ).html(stringa_html);
+            break;
+        case "NUM":  
+            var stringa_html = '<input type="number" id="editFormValore" class="editFormInput" value="'+valore+'" >'
+            $( ".editFormInput span" ).html(stringa_html);
+            break;
+        case "JOB":  
+            var stringa_html = '<input type="number" id="editFormValore" class="editFormInput" value="'+valore / 60+'" >'
+            $( ".editFormInput span" ).html(stringa_html);
+            break;
+        case "TIME":  
+            var stringa_html = '<input type="time" id="editFormValore" class="editFormInput" value="#valore#" >'
+            //var stringa_html = ""
+            //stringa_html = getTxt("/static/html/modalTime.html")
+
+            stringa_html = stringa_html.replace("#valore#", valore);
+            
+            window.console.log(stringa_html)
+            $( ".editFormInput span" ).html(stringa_html);
+
+            break;
+            
+        case "RADIO":  
+            var stringa_html = '<span><select id="editFormValore" class="editFormInput" name="Valores"> </select></span>'  
+
+            $( ".editFormInput span" ).replaceWith( stringa_html);
+
+            lista = getDecod(codice.substring(0,codice.lastIndexOf("/"))) ;
+            
+            var dropdown = document.getElementById('editFormValore')
+            
+            dropdown.length = 0;       
+            
+            for (var y = 0; y < lista[0].length; y++) {
+               
+                option = document.createElement('option');
+                option.text  = lista[1][y]+" - "+lista[0][y];
+                option.value = lista[1][y];
+                dropdown.add(option);
+                
+                // setting selected value
+                if ( lista[1][y] == valore ) {
+                    dropdown.options[y].selected = true;
+                };  
+            }
+
+            break;
+        case "SONDA":  
+            var stringa_html = '<span><select id="editFormValore" class="editFormInput" name="Valores"> </select></span>'  
+
+            $( ".editFormInput span" ).replaceWith( stringa_html);
+            lista = getSonda() ;
+            
+            var dropdown = document.getElementById('editFormValore')
+            
+            dropdown.length = 0;       
+            
+            for (var y = 0; y < lista[0].length; y++) {
+                option = document.createElement('option');
+                option.text  = lista[1][y]+" - "+lista[0][y];
+                option.value = lista[1][y];
+                dropdown.add(option);
+                
+                // setting selected value
+                if ( lista[1][y] == valore ) {
+                    dropdown.options[y].selected = true;
+                };  
+            }
+
+            break;
+        
+             
+         default:
+            var stringa_html = '<input type="text" id="editFormValore" class="editFormInput" value="'+valore+'" >'
+            $( ".editFormInput span" ).html(stringa_html);
+           
+    };
+    
+    //$( ".editFormInput" ).replaceWith( stringa_html);
+    //era questo
+    //$( ".editFormInput span" ).html(stringa_html);
+
+           
+    $("#modalEditForm").modal("show");
+        
+};
+   
+/*==================== S U B M I T ============================================*/   
+$('#modalSubmit').click(function(e){
+    e.preventDefault();
+
+    compo  = document.getElementById("editFormCompo").innerText
+    gruppo_id = document.getElementById("editFormGruppo").innerText
+
+    valore = $('#editFormValore').val()
+        
+    // send MQTT message  -------------
+    MessageSend(compo,valore);
+    
+    $("#modalEditForm").modal("hide");
+    
+    $('.modal').css('overflow-y', 'auto');
+        
+    $("#modal-"+gruppo_id).modal;
+    $("#modal-"+gruppo_id).modal("toggle");
+    
+    
+     
+});    
+
+
+</script>
+{% endblock content %}
+
+
+
+
+
+
+
+
+

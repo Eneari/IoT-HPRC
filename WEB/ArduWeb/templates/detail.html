@@ -1,0 +1,93 @@
+<!doctype html>
+
+{% extends 'base.html' %}
+
+
+
+
+
+
+ {% block titolo %}
+<br>
+<h2 class="text-success " align="center">Resumen Agua Caliente Sanitaria</h2>
+ {% endblock titolo %} 
+ 
+  
+ {% block content %}
+
+
+ <main style="width: 850px;" role="main" class="container mt-5" align="center">
+
+  <div class="container mt-3">
+    
+    
+       
+         <div class="row">
+          <div class="col-12 mb-3">
+            <button class="detail-acs btn btn-primary" type="button" name="button">
+              <span class="fa fa-list mr-2"></span>Resumen</button>
+              <button class="detail-acs btn btn-primary" type="button" name="button">
+              <span class="fa fa-image mr-2"></span>Esquema</button>
+          </div>      
+        </div>
+
+      
+        <table class="table table-success table-bordered table-sm table-hover">
+            
+            <thead class="thead-dark">
+                <tr>
+                    <th>
+                    
+                    
+                    </th>
+                    
+                    <th>
+                    
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+           
+             {% for componente in componenti %}
+           
+                 <tr>
+                   <td >{{componente.descrizione}}</td>
+                    
+                   {% if componente.tipo == "RADIO" %}
+                    <td id="{{componente.codice}}" align="center">
+                   
+                        <div class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" id="0-{{componente.codice}}"  class="custom-control-input" >
+                          <label id="label-0-{{componente.codice}}" class="custom-control-label" for="0-{{componente.codice}}"></label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="1-{{componente.codice}}"  class="custom-control-input" >
+                            <label id="label-1-{{componente.codice}}" class="custom-control-label" for="1-{{componente.codice}}"></label>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td id="{{componente.codice}}" align="center">  </td>
+                   
+                   {% endif %}
+                </tr> 
+              
+                
+                 
+            {% endfor %}
+             </tbody>
+        </table>
+       
+  
+      </div>
+    </div>
+  </div>
+  
+  
+
+{% include 'script.html' %}
+
+
+  
+{% endblock content %}
+
+

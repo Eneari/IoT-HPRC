@@ -1,0 +1,101 @@
+<!DOCTYPE html >
+{% extends 'base.html' %}
+        
+ 
+
+{% block content %}
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/svg-pan-zoom.min.js') }}" ></script>
+<script src="{{ url_for('static', filename='js/paho-mqtt-min.js')  }}"  ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/schema.js') }}" ></script>
+
+
+
+{% block titolo %}
+<br>
+<h2 class="text-success " align="center">Esquema Agua Caliente Sanitaria</h2>
+ {% endblock titolo %} 
+ 
+ <style>
+object {
+       background-color: #90EE90;
+       /*font-family: Arial; */
+       font-size: 14px;
+       margin: 10;
+   }
+
+</style>  
+  
+<style>  
+  /* Content */
+
+  #content {
+    //float: left;
+    display: inline-block;
+    width: 1200px;
+    padding: 20px 30px 0px 0px;
+    background: #90EE90;
+    border-top: 1px #5C4A32 solid;
+    border-bottom: 1px #5C4A32 solid;
+  }
+    /* Page */
+
+    #page {
+      width: 1200px;
+      margin: 0 auto;
+      padding: 40px 40px;
+    }
+    
+    .pump_on{fill:#0CF612;
+      fill-opacity:0.6;
+      stroke-width: 2;
+      stroke: #000000;
+      
+      }
+    .pump_off{fill:#F6150C;
+      fill-opacity:0.6;
+      stroke-width: 2;
+      stroke: #000000;
+      
+      }
+    .no-close .ui-dialog-titlebar-close {
+        display: none;
+      }
+    
+    .prova:hover{
+      fill: #FF0000;
+      stroke: #0000FF;
+    }
+    
+    
+    
+  </style>
+ 
+  
+
+ <main style="width: 950px;" role="main" class="container mt-5" align="center">
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-12 mb-3">
+          <a class="btn btn-primary fa fa-list mr-2" href="/acs/list" role="button"> Lista</a>
+         
+      </div>      
+    </div>
+<object id="svgObject" type="image/svg+xml" data="{{ url_for('static', filename='images/schema_acs.svg') }}" style="width: 950px; height: 500px; border:1px solid black; align: center">
+    Your browser does not support SVG
+</object>
+</div>
+</main>
+
+<script>
+    // Don't use window.onLoad like this in production, because it can only listen to one function.
+    window.onload = function() {
+      svgPanZoom('#svgObject', {
+        zoomEnabled: true,
+        controlIconsEnabled: true
+      });
+    };
+  </script>
+ 
+ 
+{% endblock content %}

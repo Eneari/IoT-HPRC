@@ -1,0 +1,85 @@
+﻿
+{% extends 'base.html' %}
+
+
+ {% block content %}
+
+ 
+<!-- index page CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/arduweb-index.css') }}">
+
+    
+ <main style="width: 650px;" role="main" class="container mt-3">
+        <div  class= "row  " > 
+    
+            <div class="col-sm">
+                <li class="mio">
+                <span>Agua Caliente Sanitaria</span>
+                <div class="acs"></div>
+                <p>
+                    <br><br><br><br>
+                    <a href="acs/list" >Entrar</a>
+                </p>
+            </li>
+            </div>
+            <div class="col-sm">
+                <li class="mio">
+                <span>Climatizacion</span>
+                <div class="clima" > </div>
+                <p>
+                    <br><br><br><br>
+                    <a href="/ArduWeb/acs/show" >Entrar</a>
+                </p>
+            </li>
+            </div>
+            <div class="col-sm">
+                <li class="mio">
+                <span>Hydro</span>
+                <div class="agua"></div>
+                <p>
+                    <br><br><br><br>
+                    <a href="acs.htm" >Entrar</a>
+                </p>
+            </li>
+            </div>
+            <div class="col-sm">
+                <li class="mio">
+                <span>Piscina</span>
+                <div class="piscina"></div>
+                <p>
+                    <br><br><br><br>
+                    <a href="acs.htm" >Entrar</a>
+                    
+                </p>
+            </li>
+            </div>
+            <div class="col-sm">
+                <li class="mio">
+                <span> Solar</span>
+                <div class="solar"></div>
+                <p>
+                    <br><br><br><br>
+                    <a href="acs.htm" >Entrar</a>
+
+                </p>
+            </li>
+            </div>
+            <div class="col-sm">
+                <li class="mio">
+                <span>Caldera</span>
+                <div class="caldera"></div>
+                <p>
+                    <br><br><br><br>
+                    <a href="acs.htm" >Entrar</a>
+                </p>
+            </li>
+            </div>      
+            
+        </div>
+            
+    </main>     
+   
+    
+
+{% endblock content%}
+

@@ -1,0 +1,167 @@
+
+<script>
+
+
+// ----   configurazione MQtt ---------- INIZIO ----------
+var hostname = "localhost";
+var port = 8080;
+//var clientId = "ArduWeb";
+clientId = "clientID-" + parseInt(Math.random() * 100);
+clientId += new Date().getUTCMilliseconds();
+var username = "";
+var password = "";
+//var subscription = "ST/VAL/ST04";
+//var subscription = "#";
+
+
+
+
+mqttClient = new Paho.MQTT.Client(hostname, port, clientId);
+
+mqttClient.onMessageArrived =  MessageArrived;
+mqttClient.onConnectionLost = ConnectionLost;
+
+
+Connect();
+
+
+// ----   configurazione MQtt ---------- FINE ----------
+/*Initiates a connection to the MQTT broker*/
+function Connect(){
+    window.console.log("----sono in connect -------");
+
+    mqttClient.connect({
+        onSuccess: Connected,
+        onFailure: ConnectionFailed,
+        keepAliveInterval: 60
+        
+    });
+}
+
+/*Callback for successful MQTT connection */
+function Connected() {
+  console.log("Connected");
+  
+    connesso = true;  
+    mqttClient.subscribe('#');
+}
+
+/*Callback for failed connection*/
+function ConnectionFailed(res) {
+    console.log("Connect failed:" + res.errorMessage);
+    connesso = false;  
+}
+
+/*Callback for lost connection*/
+function ConnectionLost(res) {
+  if (res.errorCode != 0) {
+    console.log("Connection lost:" + res.errorMessage);
+    connesso = false;  
+    Connect();
+  }
+}
+
+/*Callback for incoming message processing */
+function MessageArrived(message) {
+    console.log(message.destinationName +" : " + message.payloadString);
+    var componente = message.destinationName ;
+    var valore     = message.payloadString ;
+   //console.log(componente)
+   //console.log(valore)
+   var s = document.getElementById(componente);
+   
+  
+   
+    
+    if (s != null) {
+        {% for componente in componenti %}
+        
+            if( "{{componente.codice}}" == componente) {
+                
+                var v_tipo = "{{componente.tipo}}" 
+            }
+            
+    
+         switch(v_tipo) {
+             case "TEMP":  
+                 var val = Number(valore);
+                 s.innerHTML = val.toFixed(2) + "  C°";
+                 break;
+            case "NUM":  
+                 var val = Number(valore);
+                 s.innerHTML = val ;
+                 break;
+            case "RADIO":  
+             
+                 var label_off = 'label-0-'+componente;
+                 var label_on  = 'label-1-'+componente;
+                 // -- definisco la decodifica dei valori--
+                //var v_descr_off = LookUpDescrizione('0-'+componente.substring(0,componente.lastIndexOf("/")));
+                //var v_descr_on  = LookUpDescrizione('1-'+componente.substring(0,componente.lastIndexOf("/")));
+                var v_descr_off = LookUpDescrizione(componente.substring(0,componente.lastIndexOf("/")),"0");
+                var v_descr_on  = LookUpDescrizione(componente.substring(0,componente.lastIndexOf("/")),"1");
+               
+             
+                 if (componente.slice(0,2) == "VT" ) {
+                     document.getElementById(label_off).innerHTML = v_descr_off;  
+                     document.getElementById(label_on).innerHTML  = v_descr_on;   
+                 }
+                 else {
+                     document.getElementById(label_off).innerHTML = v_descr_off;  
+                     document.getElementById(label_on).innerHTML  = v_descr_on;
+                 }                        
+            
+                 var off = '0-'+componente;
+                 var on  = '1-'+componente;
+                 if (valore == '0') {
+                     document.getElementById(off).checked  = true;
+                     document.getElementById(off).disabled = false;
+                     document.getElementById(on).disabled = true;
+                     document.getElementById(on).checked  = false; 
+                     
+                 }
+                 else {
+                     document.getElementById(off).disabled = true;
+                     document.getElementById(off).checked = false;
+                     document.getElementById(on).disabled = false;
+                     document.getElementById(on).checked = true;
+                 }
+                 
+
+                 break;
+                 
+            default:
+            
+                s.innerHTML = valore ;
+
+                 
+         }      
+        
+        
+        {%endfor%}
+     
+        
+    }
+ 
+};
+
+function LookUpDescrizione(codice,valore) { 
+    
+    {% for riga in decodifica %}
+        //console.log("{{riga.codice}}" + "  "+"{{riga.valore}}")
+        riga_codice = "{{riga.codice}}"
+        riga_valore = "{{riga.valore}}"
+        riga_descrizione = "{{riga.descrizione}}"
+        
+        if ( riga_codice == codice & riga_valore == valore) {
+            
+            return riga_descrizione
+        }
+    
+    {% endfor  %}
+    
+    return null;
+
+}
+
+</script>
