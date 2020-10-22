@@ -14,6 +14,8 @@ Al adoptar la filosofía de IoT, un componente "estúpido" como una sonda de tem
 
 Esquema General de los componentes :
 
+https://github.com/Eneari/IoT-HPRC/blob/main/Doc/Overview.svg
+
 
 1 Broker MQTT
 Es el corazon de todo el projecto : todas las comunicaciones entre componentes se realizan en MQTT. Mosquitto / Paho-Mqtt por el Client ( instalar a parte )
