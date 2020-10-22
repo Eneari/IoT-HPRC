@@ -14,7 +14,7 @@ Al adoptar la filosofía de IoT, un componente "estúpido" como una sonda de tem
 
 Esquema General de los componentes :
 
-https://github.com/Eneari/IoT-HPRC/blob/main/Doc/Overview.svg?raw=True
+![alt text](https://github.com/Eneari/IoT-HPRC/blob/main/Doc/Overview.svg?raw=True)
 
 
 1 Broker MQTT
