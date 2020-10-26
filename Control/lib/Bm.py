@@ -31,9 +31,6 @@ valori = {}
 pompe = []
 first_time = {}
 
-time_max = 5
-time_count = int(time.time())
-update = False
 
 #-------------------------------------------------------------------------
 class BM():

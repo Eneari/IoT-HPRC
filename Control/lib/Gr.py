@@ -23,19 +23,12 @@
 import paho.mqtt.client as mqtt #import the client
 import logging
 logger = logging.getLogger(__name__)
-LOG_FILENAME = 'GR.log'
-
-#logging.basicConfig(filename='VM.log',  format='%(name)s - %(levelname)s - %(message)s')%(filename)s:%(lineno)s 
-logging.basicConfig(filename=LOG_FILENAME,
-                    format=' %(levelname)s - %(filename)s - %(asctime)s - %(message)s  ',
-                    level=logging.DEBUG,
-                    )
 
 
 
 
 # ------------------------------------------------------------------------
-from threading import Thread
+#from threading import Thread
 
 from lib import Bm
 from lib import utils
@@ -48,15 +41,23 @@ pompe = {}
 
 
 #-------------------------------------------------------------------------
-class GR(Thread):
+class GR():
 
     def __init__(self,board,gruppo):
-        Thread.__init__(self)
+        #Thread.__init__(self)
         self.board = board
         self.gruppo = gruppo
 
 
-    def run(self):
+        #def run(self):
+        LOG_FILENAME = 'GR-'+self.gruppo+'.log'
+
+        #logging.basicConfig(filename='VM.log',  format='%(name)s - %(levelname)s - %(message)s')%(filename)s:%(lineno)s 
+        logging.basicConfig(filename=LOG_FILENAME,
+                            format=' %(levelname)s - %(filename)s - %(asctime)s - %(message)s  ',
+                            level=logging.DEBUG,
+                            )
+
 
 
         client = mqtt.Client(transport="websockets") #create new instance
@@ -64,11 +65,13 @@ class GR(Thread):
         client.on_connect=self.on_connect #attach function to callback
 
         #print("connecting to broker")
+                
+        logging.info("--------  ELABORO GRUPPO ........ "+self.gruppo)
+
         logging.info("connecting to broker ........ ")
         client.connect("localhost",8080) 
 
         client.subscribe("GR/#")
-        #client.subscribe("BM/#")
         client.subscribe("TIMESTAMP")
 
         
@@ -80,26 +83,17 @@ class GR(Thread):
 	
             time.sleep(1)
     
- #------------------------------
+ #------------------------------------------------------------
     def on_message(self,client, userdata, message):
-        #print("message received " ,message.topic,"  ",str(message.payload.decode("utf-8")))
-        logging.debug("message received " +message.topic+"  "+str(message.payload.decode("utf-8")))
 
-
-
-        # carico le pompe del gruppo a parte
-        # print("PUMP DETECT-----------------------")
-        # print(message.topic[-4:-2])
-        # print(self.gruppo[-2:])
-        # print(message.topic[-4:-2])
-
-        # if (message.topic[-4:-2] ==  self.gruppo[-2:] ) and ( message.topic[0:2]) ==  "BM" :
-        #     #print("POMPEEE")
-        #     pompe[message.topic] = str(message.payload.decode("utf-8"))
-        # else :
+        # filtro solo i messaggi del gruppo
+        if (message.topic[-5:] ==  self.gruppo )  :
         
+            #print("message received " ,message.topic,"  ",str(message.payload.decode("utf-8")))
         
-        valori[message.topic] = str(message.payload.decode("utf-8"))
+            logging.debug("message received " +message.topic+"  "+str(message.payload.decode("utf-8")))
+        
+            valori[message.topic] = str(message.payload.decode("utf-8"))
 
 
         #     client.subscribe(str(message.payload.decode("utf-8")))
@@ -109,10 +103,16 @@ class GR(Thread):
             
         
         # eseguo i controlli in base alla consegna
-        error = read_settings(self.gruppo,client)
+        try:
+            error = read_settings(self.gruppo,client)
+        except:
+            print("errore in read_settings nel Gruppo :" ,self.gruppo)
       
         if not error :
-            chk_consegna(self.gruppo,self.board,client)
+            try:
+                chk_consegna(self.gruppo,self.board,client)
+            except:
+                print("errore in chk_consegna nel Gruppo :" ,self.gruppo)
         
     #------------------------------
     def on_connect(self):
@@ -122,6 +122,9 @@ class GR(Thread):
 
 #----------------------------------------------------------------------
 def read_settings(gruppo,client):
+
+
+    print("------------------ sono in read settings----")
 
     errore = False
     
@@ -203,8 +206,9 @@ def read_settings(gruppo,client):
     sonda_t  = get_settings('sonda_t')
     if sonda_t :
         temperatura = valori.get(sonda_t,None)
-        temperatura = temperatura.strip()
         if temperatura :
+
+            temperatura = temperatura.strip()
 
             try:
                 temperatura = float(temperatura)
@@ -230,6 +234,9 @@ def get_settings(var):
 
 # ----------------------------------------------------------------------------
 def chk_consegna(gruppo,board,conn) :
+
+
+    
 
     from lib import utils
     from lib import messages

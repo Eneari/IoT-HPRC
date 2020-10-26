@@ -1,0 +1,349 @@
+ DEBUG - Control.py - 2020-10-26 17:05:10,313 -  ELABORO LE VALVOLE-------  
+ INFO - Vm.py - 2020-10-26 17:05:10,330 - connecting to broker ........   
+ INFO - Gr.py - 2020-10-26 17:05:10,353 - --------  ELABORO GRUPPO ........ GRP01  
+ INFO - Gr.py - 2020-10-26 17:05:10,362 - connecting to broker ........   
+ INFO - Gr.py - 2020-10-26 17:05:10,376 - --------  ELABORO GRUPPO ........ GRP02  
+ INFO - Gr.py - 2020-10-26 17:05:10,386 - connecting to broker ........   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,702 - message received VT/STATUS/VT01  1  
+ DEBUG - Gr.py - 2020-10-26 17:05:10,703 - message received GR/ST/GRP01  ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:10,709 - consegna ----  : None  
+ ERROR - Vm.py - 2020-10-26 17:05:10,706 - consegna non inserita   
+ INFO - Gr.py - 2020-10-26 17:05:10,709 - time on  ----  : None  
+ ERROR - Vm.py - 2020-10-26 17:05:10,710 - pin non inserito :   
+ INFO - Gr.py - 2020-10-26 17:05:10,710 - time off ----  : None  
+ DEBUG - Vm.py - 2020-10-26 17:05:10,711 - message received VT/ALM/ON/VT01  09:00:00  
+ INFO - Gr.py - 2020-10-26 17:05:10,710 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,714 - consegna sp -  : None  
+ ERROR - Vm.py - 2020-10-26 17:05:10,714 - consegna non inserita   
+ INFO - Gr.py - 2020-10-26 17:05:10,714 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:10,714 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:10,725 - connecting to broker ........   
+ INFO - Gr.py - 2020-10-26 17:05:10,730 - consegna ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,730 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,731 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,731 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,734 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,734 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:10,735 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:10,738 - connecting to broker ........   
+ ERROR - Vm.py - 2020-10-26 17:05:10,792 - pin non inserito :   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,794 - message received VT/ALM/OFF/VT01  21:00:00  
+ ERROR - Vm.py - 2020-10-26 17:05:10,794 - consegna non inserita   
+ ERROR - Vm.py - 2020-10-26 17:05:10,796 - pin non inserito :   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,797 - message received VT/SP/VT01  37  
+ ERROR - Vm.py - 2020-10-26 17:05:10,798 - consegna non inserita   
+ ERROR - Vm.py - 2020-10-26 17:05:10,799 - pin non inserito :   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,800 - message received VT/ST/VT01  ST/VAL/ST03  
+ ERROR - Vm.py - 2020-10-26 17:05:10,808 - consegna non inserita   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,818 - message received VT/PIN/VT01  6  
+ ERROR - Vm.py - 2020-10-26 17:05:10,819 - consegna non inserita   
+ DEBUG - Vm.py - 2020-10-26 17:05:10,821 - message received VT/CONS/VT01  9  
+ DEBUG - Vm.py - 2020-10-26 17:05:10,823 - message received VT/CONS/SP/VT01  0  
+ DEBUG - Vm.py - 2020-10-26 17:05:10,824 - message received TIMESTAMP  1603731910  
+ DEBUG - Vm.py - 2020-10-26 17:05:10,826 - message received ST/VAL/ST03  24.25  
+ INFO - Vm.py - 2020-10-26 17:05:10,828 - status ------  : 1  
+ INFO - Vm.py - 2020-10-26 17:05:10,828 - consegna ----  : 9  
+ INFO - Vm.py - 2020-10-26 17:05:10,829 - time on  ----  : 09:00:00  
+ INFO - Vm.py - 2020-10-26 17:05:10,829 - time off ----  : 21:00:00  
+ INFO - Vm.py - 2020-10-26 17:05:10,829 - set point ---  : 37.0  
+ INFO - Vm.py - 2020-10-26 17:05:10,829 - consegna sp -  : 0  
+ INFO - Vm.py - 2020-10-26 17:05:10,830 - sonda t  ----  : ST/VAL/ST03  
+ INFO - Vm.py - 2020-10-26 17:05:10,834 - temperatura -  : 24.25  
+ INFO - Vm.py - 2020-10-26 17:05:10,835 - pin  --------  : 6  
+ DEBUG - Bm.py - 2020-10-26 17:05:10,923 - message received BM/JOB/ALT/START/BM01_1  1585741208  
+ ERROR - Bm.py - 2020-10-26 17:05:10,926 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,927 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,931 - message received BM/JOB/ALT/START/BM01_2  1585741205  
+ ERROR - Bm.py - 2020-10-26 17:05:10,932 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,934 - message received BM/STATUS/BM02_1  1  
+ ERROR - Bm.py - 2020-10-26 17:05:10,934 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,934 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,939 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,940 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,943 - message received BM/STATUS/BM02_2  0  
+ ERROR - Bm.py - 2020-10-26 17:05:10,944 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,946 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,950 - message received BM/JOB/ALT/SET/BM01_1  60  
+ ERROR - Bm.py - 2020-10-26 17:05:10,950 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,951 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,951 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,955 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,955 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,956 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,961 - message received BM/JOB/ALT/SET/BM01_2  60  
+ ERROR - Bm.py - 2020-10-26 17:05:10,963 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,963 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,962 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,965 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,971 - message received BM/PIN/BM02_1  12  
+ ERROR - Bm.py - 2020-10-26 17:05:10,973 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,974 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,978 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,979 - message received BM/JOB/ALT/TIME/BM01_1  3  
+ DEBUG - Bm.py - 2020-10-26 17:05:10,986 - message received BM/PIN/BM02_2  13  
+ ERROR - Bm.py - 2020-10-26 17:05:10,984 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,987 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,990 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,990 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:10,996 - message received BM/JOB/ALT/TIME/BM01_2  0  
+ ERROR - Bm.py - 2020-10-26 17:05:10,996 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:10,997 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,004 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,004 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,008 - message received BM/JOB/BM01_1  57089  
+ ERROR - Bm.py - 2020-10-26 17:05:11,008 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,009 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,011 - message received TIMESTAMP  1603731910  
+ ERROR - Bm.py - 2020-10-26 17:05:11,013 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,014 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,018 - message received BM/JOB/BM01_2  2127  
+ ERROR - Bm.py - 2020-10-26 17:05:11,019 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,019 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,020 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,021 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,025 - message received BM/JOB/START/BM01_1  1603731535  
+ ERROR - Bm.py - 2020-10-26 17:05:11,038 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,039 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,043 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,044 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,046 - message received BM/JOB/START/BM01_2  1603731535  
+ ERROR - Bm.py - 2020-10-26 17:05:11,047 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,048 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,048 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,049 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,050 - message received BM/JOB/TIME/BM01_1  542700.0  
+ ERROR - Bm.py - 2020-10-26 17:05:11,051 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,052 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,052 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,053 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,054 - message received BM/JOB/TIME/BM01_2  16871141.0  
+ ERROR - Bm.py - 2020-10-26 17:05:11,055 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,055 - status non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,056 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,056 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,058 - message received BM/STATUS/BM01_1  1  
+ ERROR - Bm.py - 2020-10-26 17:05:11,059 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,059 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,060 - status non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,061 - message received BM/STATUS/BM01_2  0  
+ ERROR - Bm.py - 2020-10-26 17:05:11,062 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,075 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,079 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,081 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,083 - pin non inserito :   
+ ERROR - Bm.py - 2020-10-26 17:05:11,084 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,086 - message received BM/PIN/BM01_1  7  
+ ERROR - Bm.py - 2020-10-26 17:05:11,088 - pin non inserito :   
+ DEBUG - Bm.py - 2020-10-26 17:05:11,089 - message received BM/PIN/BM01_2  8  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,103 - message received BM/SET/BM01_1  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,106 - message received BM/SET/BM01_2  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,112 - message received TIMESTAMP  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,131 - message received BM/JOB/START/BM01_1  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,140 - message received BM/JOB/TIME/BM01_1  543075.0  
+ DEBUG - Bm.py - 2020-10-26 17:05:11,142 - message received BM/JOB/START/BM01_2  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:12,135 - consegna ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,137 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,138 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,138 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,139 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,141 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,142 - temperatura -  : None  
+ DEBUG - Gr.py - 2020-10-26 17:05:12,149 - message received GR/CONS/SP/GRP01  1  
+ INFO - Gr.py - 2020-10-26 17:05:12,154 - consegna ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,154 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,155 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,155 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:12,162 - consegna sp -  : 1  
+ INFO - Bm.py - 2020-10-26 17:05:12,145 - connecting to broker ........   
+ INFO - Gr.py - 2020-10-26 17:05:12,163 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:12,167 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:12,187 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:12,452 - message received BM/JOB/ALT/START/BM01_1  1585741208  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,453 - message received BM/JOB/ALT/START/BM01_2  1585741205  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,456 - message received BM/JOB/ALT/SET/BM01_1  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,460 - message received BM/JOB/ALT/SET/BM01_2  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,466 - message received BM/JOB/ALT/TIME/BM01_1  3  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,468 - message received BM/JOB/ALT/TIME/BM01_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,478 - message received BM/JOB/BM01_1  57089  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,483 - message received BM/JOB/BM01_2  2127  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,488 - message received BM/JOB/START/BM01_1  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,496 - message received BM/JOB/START/BM01_2  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,502 - message received BM/JOB/TIME/BM01_1  543075.0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,505 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,507 - message received BM/JOB/TIME/BM01_2  16871141.0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,516 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,518 - message received BM/STATUS/BM01_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,520 - message received BM/STATUS/BM01_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,534 - message received BM/PIN/BM01_1  7  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,532 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,538 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,540 - message received BM/PIN/BM01_2  8  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,552 - message received BM/SET/BM01_1  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,556 - message received TIMESTAMP  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,556 - message received BM/SET/BM01_2  60  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,560 - message received TIMESTAMP  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,569 - message received BM/JOB/START/BM01_1  1603731910  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,570 - message received BM/JOB/TIME/BM01_1  543075.0  
+ DEBUG - Bm.py - 2020-10-26 17:05:12,572 - message received BM/JOB/START/BM01_2  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:13,572 - consegna ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,572 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,573 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,575 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,575 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,576 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,576 - temperatura -  : None  
+ DEBUG - Gr.py - 2020-10-26 17:05:13,579 - message received GR/CONS/GRP01  19  
+ INFO - Gr.py - 2020-10-26 17:05:13,582 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,582 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,583 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,584 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,584 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,585 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,585 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:13,587 - connecting to broker ........   
+ INFO - Gr.py - 2020-10-26 17:05:13,592 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,593 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,593 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,594 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,594 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,594 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,595 - temperatura -  : None  
+ DEBUG - Gr.py - 2020-10-26 17:05:13,606 - message received GR/SP/GRP01  15  
+ INFO - Gr.py - 2020-10-26 17:05:13,616 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,617 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,622 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,624 - set point ---  : 15.0  
+ INFO - Gr.py - 2020-10-26 17:05:13,625 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,625 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,626 - temperatura -  : None  
+ DEBUG - Gr.py - 2020-10-26 17:05:13,628 - message received GR/ALM/ON/GRP01  07:00  
+ INFO - Gr.py - 2020-10-26 17:05:13,666 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,670 - time on  ----  : 07:00  
+ INFO - Gr.py - 2020-10-26 17:05:13,674 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,675 - set point ---  : 15.0  
+ INFO - Gr.py - 2020-10-26 17:05:13,675 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,675 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,676 - temperatura -  : None  
+ DEBUG - Gr.py - 2020-10-26 17:05:13,687 - message received GR/ALM/OFF/GRP01  17:16  
+ INFO - Gr.py - 2020-10-26 17:05:13,690 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,691 - time on  ----  : 07:00  
+ INFO - Gr.py - 2020-10-26 17:05:13,691 - time off ----  : 17:16  
+ INFO - Gr.py - 2020-10-26 17:05:13,692 - set point ---  : 15.0  
+ INFO - Gr.py - 2020-10-26 17:05:13,692 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,692 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,693 - temperatura -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,700 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,700 - time on  ----  : 07:00  
+ INFO - Gr.py - 2020-10-26 17:05:13,701 - time off ----  : 17:16  
+ INFO - Gr.py - 2020-10-26 17:05:13,701 - set point ---  : 15.0  
+ INFO - Gr.py - 2020-10-26 17:05:13,701 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,702 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,702 - temperatura -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:13,710 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:05:13,711 - time on  ----  : 07:00  
+ INFO - Gr.py - 2020-10-26 17:05:13,712 - time off ----  : 17:16  
+ INFO - Gr.py - 2020-10-26 17:05:13,713 - set point ---  : 15.0  
+ INFO - Gr.py - 2020-10-26 17:05:13,713 - consegna sp -  : 1  
+ INFO - Gr.py - 2020-10-26 17:05:13,713 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:05:13,714 - temperatura -  : None  
+ DEBUG - Bm.py - 2020-10-26 17:05:13,897 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:13,902 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:13,912 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:13,914 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:13,921 - message received TIMESTAMP  1603731910  
+ DEBUG - Gr.py - 2020-10-26 17:05:14,926 - message received GR/CONS/GRP02  11  
+ INFO - Gr.py - 2020-10-26 17:05:14,930 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:05:14,931 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:14,931 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:14,933 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:14,934 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:14,934 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:14,934 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:14,937 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:15,276 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:15,284 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:15,304 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:15,315 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:15,328 - message received TIMESTAMP  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:16,341 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:05:16,343 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:16,344 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:16,344 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:16,345 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:16,345 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:16,346 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:16,359 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:16,678 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:16,689 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:16,706 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:16,713 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:16,722 - message received TIMESTAMP  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:17,728 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:05:17,732 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:17,733 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:17,734 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:17,734 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:17,734 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:17,735 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:17,737 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:18,053 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:18,061 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:18,070 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:18,073 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:18,087 - message received TIMESTAMP  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:19,095 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:05:19,096 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:19,099 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:19,100 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:19,100 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:19,101 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:19,101 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:19,105 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:19,423 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:19,431 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:19,441 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:19,448 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:19,459 - message received TIMESTAMP  1603731910  
+ INFO - Gr.py - 2020-10-26 17:05:20,468 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:05:20,469 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:20,469 - time off ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:20,470 - set point ---  : None  
+ INFO - Gr.py - 2020-10-26 17:05:20,471 - consegna sp -  : None  
+ INFO - Gr.py - 2020-10-26 17:05:20,472 - sonda t  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:05:20,472 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:05:20,476 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:05:20,810 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:05:20,818 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:05:20,831 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:05:20,839 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:05:20,850 - message received TIMESTAMP  1603731910  
+ DEBUG - Vm.py - 2020-10-26 17:06:20,807 - message received TIMESTAMP  1603731980  
+ INFO - Gr.py - 2020-10-26 17:06:20,807 - consegna ----  : 11  
+ INFO - Gr.py - 2020-10-26 17:06:20,807 - time on  ----  : None  
+ INFO - Gr.py - 2020-10-26 17:06:20,808 - time off ----  : None  
+ INFO - Vm.py - 2020-10-26 17:06:20,808 - status ------  : 1  
+ INFO - Gr.py - 2020-10-26 17:06:20,808 - set point ---  : None  
+ INFO - Vm.py - 2020-10-26 17:06:20,808 - consegna ----  : 9  
+ INFO - Gr.py - 2020-10-26 17:06:20,808 - consegna sp -  : None  
+ INFO - Vm.py - 2020-10-26 17:06:20,808 - time on  ----  : 09:00:00  
+ INFO - Gr.py - 2020-10-26 17:06:20,808 - sonda t  ----  : None  
+ INFO - Vm.py - 2020-10-26 17:06:20,809 - time off ----  : 21:00:00  
+ INFO - Gr.py - 2020-10-26 17:06:20,809 - temperatura -  : None  
+ INFO - Vm.py - 2020-10-26 17:06:20,809 - set point ---  : 37.0  
+ INFO - Gr.py - 2020-10-26 17:06:20,811 - consegna ----  : 19  
+ INFO - Gr.py - 2020-10-26 17:06:20,813 - time on  ----  : 07:00  
+ INFO - Gr.py - 2020-10-26 17:06:20,814 - time off ----  : 17:16  
+ INFO - Vm.py - 2020-10-26 17:06:20,809 - consegna sp -  : 0  
+ INFO - Vm.py - 2020-10-26 17:06:20,816 - sonda t  ----  : ST/VAL/ST03  
+ INFO - Gr.py - 2020-10-26 17:06:20,815 - set point ---  : 15.0  
+ INFO - Vm.py - 2020-10-26 17:06:20,816 - temperatura -  : 24.25  
+ INFO - Gr.py - 2020-10-26 17:06:20,816 - consegna sp -  : 1  
+ INFO - Vm.py - 2020-10-26 17:06:20,816 - pin  --------  : 6  
+ INFO - Gr.py - 2020-10-26 17:06:20,817 - sonda t  ----  : ST/VAL/ST05  
+ INFO - Gr.py - 2020-10-26 17:06:20,817 - temperatura -  : None  
+ INFO - Bm.py - 2020-10-26 17:06:20,818 - connecting to broker ........   
+ DEBUG - Bm.py - 2020-10-26 17:06:21,131 - message received BM/STATUS/BM02_1  1  
+ DEBUG - Bm.py - 2020-10-26 17:06:21,140 - message received BM/STATUS/BM02_2  0  
+ DEBUG - Bm.py - 2020-10-26 17:06:21,149 - message received BM/PIN/BM02_1  12  
+ DEBUG - Bm.py - 2020-10-26 17:06:21,156 - message received BM/PIN/BM02_2  13  
+ DEBUG - Bm.py - 2020-10-26 17:06:21,165 - message received TIMESTAMP  1603731980  
