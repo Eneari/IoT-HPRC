@@ -22,7 +22,7 @@ logging.basicConfig(filename=LOG_FILENAME,
                     level=logging.DEBUG,
                     )
 
-from threading import Thread
+#from threading import Thread
 from lib import utils
 import time
 import sys
@@ -32,17 +32,17 @@ valori = {}
 
 
 #-------------------------------------------------------------------------
-class VM(Thread):
+class VM():
 
     def __init__(self,board,compo):
-        Thread.__init__(self)
+        #Thread.__init__(self)
         self.board = board
         self.compo = compo
         self.first_time = True
 
        
     #----------------------------------
-    def run(self):
+    #def run(self):
 
         print("creating new instance")
 
