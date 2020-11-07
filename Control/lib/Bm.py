@@ -38,7 +38,7 @@ class BM():
         
         
         LOG_FILENAME = './log/GR-'+self.gruppo+'.log'
-        logger = logging.getLogger(self.gruppo)
+        #logger = logging.getLogger(self.gruppo)
         #logging.basicConfig(filename=LOG_FILENAME,  
          #                   format='%(name)s - %(levelname)s - %(message)s)%(filename)s:%(lineno)s ' )
         
