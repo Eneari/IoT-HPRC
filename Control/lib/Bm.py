@@ -7,343 +7,275 @@
 #	pin :		pin arduino a cui e' collegato il componente
 # ------------------------------------------------------------------------
 
-import paho.mqtt.client as mqtt #import the client
-
-from threading import Thread
-
-
 import logging
-logger = logging.getLogger(__name__)
-LOG_FILENAME = 'BM.log'
-
-#logging.basicConfig(filename='BM.log',  format='%(name)s - %(levelname)s - %(message)s')%(filename)s:%(lineno)s 
-logging.basicConfig(filename=LOG_FILENAME,
-                    format=' %(levelname)s - %(threadname)s - %(asctime)s - %(message)s  ',
-                    level=logging.DEBUG,
-                    )
+import traceback
 
 
-from lib import utils
+#from lib import utils
 import time
 
-buffer = {}
-valori = {}
-pompe = []
+
+import socket
+
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65432        # The port used by the server
+
+
 first_time = {}
+
+
 
 
 #-------------------------------------------------------------------------
 class BM():
+    
+    
+    ritorno = {}
 
-    def __init__(self, board,gruppo,consegna,consegna_grp=True):
-        self.board = board
+
+    def __init__(self,gruppo):
         self.gruppo = gruppo
-        self.consegna=consegna
-        self.consegna_grp=consegna_grp
-
-
-        print("------------  istanzio pompa-----")
-
-    #def run(self):      
-
-        client = mqtt.Client(transport="websockets") #create new instance
-        client.on_message=self.on_message #attach function to callback
-        client.on_connect=self.on_connect #attach function to callback
-
-        print("connecting to broker")
-        logging.info("connecting to broker ........ ")
-        client.connect("localhost",8080) 
-
         
-        client.subscribe("BM/#")
-        client.subscribe("TIMESTAMP")
-
-
-        while True :
-            print("---  messaggi  -----")
-
-            client.loop_start()
-	
-            time.sleep(1) 
-            client.loop_stop()
-
-            return
         
-   
-
-    #--------------------------------------------------------
-    def on_message(self,client, userdata, message):
-        #print("message received " ,message.topic,"  ",str(message.payload.decode("utf-8")))
-        #logging.debug("message received " +message.topic+"  "+str(message.payload.decode("utf-8")))
+        LOG_FILENAME = './log/GR-'+self.gruppo+'.log'
+        logger = logging.getLogger(self.gruppo)
+        #logging.basicConfig(filename=LOG_FILENAME,  
+         #                   format='%(name)s - %(levelname)s - %(message)s)%(filename)s:%(lineno)s ' )
         
-        # filtro solo le pompe del gruppo
-        if (message.topic[-4:-2] ==  self.gruppo[-2:] )  :
+        
+        logging.basicConfig(filename=LOG_FILENAME,
+                            format=' %(levelname)s - %(filename)s:%(lineno)s  - %(asctime)s - %(message)s  ',
+                            level=logging.DEBUG,
+                            )
+    
+    # ----------------------------------------------------------------------------
+    def chk_consegna_BM(self,gruppo,consegna, consegna_grp,pumps,valori) :
+        
+        #print("SONO IN CHK CONSEGNA----BM---------------------")
+        logging.info("--------  SONO IN CHK CONSEGNA----BM........ ")
+        logging.info("--consegna      :  " + consegna)
+        logging.info("--consegna_grp  :  " + str(consegna_grp))
 
-            logging.debug("message received " +message.topic+"  "+str(message.payload.decode("utf-8")))
-            stringa = str(message.payload.decode("utf-8"))
-            valori[message.topic] = stringa
+
+        #print(valori)
+        
+        pompe=[]
+        
+        for items in pumps:
+            pompe.append(items[0])
+
+        #alternanza = False
+               
+        if consegna == '00' :       # tutte le pompe spente
+            logging.debug(" Consegna 00 -")
             
-            compo = message.topic[message.topic.rfind("/")+1:]
-
-            try:
-                first_time[compo]
-            except :
-                first_time[compo] = True
-
-            try:
-                pompe.index(compo)
-            except:
-                pompe.append(compo)
-
-        
-        #-# eseguo i controlli di congruenza sui dati
-
-        general_error = True
-
-        for compo in pompe:
-            
-            error = read_settings(compo)
-      
-            if not error :
-                if first_time[compo] :
-                    set_pin(self.board)
-                    first_time[compo] = False
-                general_error = False
-            else :
-                general_error = True
-
-        if not general_error :
-            chk_consegna(self.board,self.gruppo,self.consegna, self.consegna_grp,client)
-
-        # se un aggiornamento di clock aggiorno i tempi di lavoro delle pompe
-        if (message.topic ==  "TIMESTAMP" ) :
-            logging.debug("message received " +message.topic+"  "+str(message.payload.decode("utf-8")))
-            upd_timestamp(str(message.payload.decode("utf-8"))  ,client )
-
-
-
-        
-    #------------------------------
-    def on_connect(self):
-        print("connected.........")
-        logging.debug("connected.........")
-
-
-#----------------------------------------------------------------------
-def read_settings(compo):
-    #print("--------- sono in read settings BM --------------- ",compo)
-
-    errore = False
-   
-
-
-    # leggo il pin ----------------------------
-    pin = valori.get(f"BM/PIN/{compo}",None)
-    if pin :
-        pin = pin.strip()
-        try:
-            pin = int(pin)
-        except ValueError:
-            #print("pin non ammesso : ",pin)
-            logging.error("pin non ammesso : "+pin)
-            pin = None
-            errore = True
-    else :
-        #print("pin non inserito")
-        logging.error("pin non inserito : ")
-        errore = True
-    buffer['pin']= pin
-
-   # leggo lo stato  ----------------------------
-    status = valori.get(f"BM/STATUS/{compo}",None)
-    if status :
-        status = status.strip()
-    else :
-        #print("status non inserito")
-        logging.error("status non inserito : ")
-        errore = True
-    buffer['status']= status
-
-    
-    
-    # leggo il tempo di alternanza ----------------------------
-    try:
-        job_alt_set = valori[f"BM/JOB/ALT/SET/{compo}"]
-        job_alt_set = int(job_alt_set.strip())
-    except :
-        job_alt_set = None
-        print("job_alt_set non inserito")
-        
-    buffer['job_alt_set']= job_alt_set
-
-    # leggo il timestamp di start assoluto  ----------------------------
-    try:
-        job_start = valori[f"BM/JOB/START/{compo}"]
-        job_start = int(job_start.strip())
-    except:
-        job_start = None
-        print("job_start non inserito")
-
-    buffer['job_start']= job_start
-
-    # leggo il tempo  assoluto  di lavoro ----------------------------
-    try:
-        job_time = valori[f"BM/JOB/TIME/{compo}"]
-        job_time = int(job_time.strip())
-    except:
-        job_time = None
-        print("job_time non inserito")
-        
-    buffer['job_time']= job_time
-
-    # leggo il timestamp di start alternanza ----------------------------
-    try:
-        job_alt_start = valori[f"BM/JOB/ALT/START/{compo}"]
-        job_alt_start = int(job_alt_start.strip())
-    except:
-        job_alt_start = None
-        print("job_alt_start non inserito ",compo)
-        
-    buffer['job_alt_start']= job_alt_start
-
-    # leggo il tempo  di lavoro alternanza ----------------------------
-    try:
-        job_alt_time = valori[f"BM/JOB/ALT/TIME/{compo}"] 
-        job_alt_time = int(job_alt_time.strip())
-    except:
-        job_alt_time = None
-        print("job_alt_time non inserito ",compo)
-        
-    buffer['job_alt_time']= job_alt_time
-    
-    
-    
-    return errore
-
-# -----------------------------------------
-def get_settings(var):
-
-    try :
-        return str(buffer[var])
-    except :
-        return None
-
-# ----------------------------------------------------------------------------
-def chk_consegna(board,gruppo,consegna, consegna_grp,client) :
-
-
-    # from lib import utils
-    # from lib import messages
-    import time
-
-
-
-    #alternanza = False
-           
-    if consegna == '00' :       # tutte le pompe spente
-        
-        
-        for compo in pompe  :
-            # leggo i dati della pompa
-            print("pompa in elab... ",compo)
-            pin = valori[f"BM/PIN/{compo}"]
-            print("pin... ",pin)
-            status = valori[f"BM/STATUS/{compo}"]
-            print("status... ",status)
-
-            if status == '1':
-                print("spengo la pompa ... ",compo)
-                board.digital[int(pin)].write(0)
-                print("aggiorno lo stato ... ",compo)
-                client.publish(f"BM/STATUS/{compo}", '0',retain=True)
-
-
-    elif consegna[1:2]  == "1"  : # marcha solo la pompa indicata
-        
-        for compo in  pompe :
-            # leggo i dati della pompa
-            print("pompa in elab... ",compo)
-            pin = valori[f"BM/PIN/{compo}"]
-            print("pin... ",pin)
-            status = valori[f"BM/STATUS/{compo}"]
-            print("status... ",status)
-        
-            if consegna[0:1] == compo[-1:] : # sono sulla pompa indicata in consegna
-                #upd_status(compo,"1")
-                if status == '0':
-                    board.digital[int(pin)].write(1)
-                    print("aggiorno lo stato ... ",compo)
-                    client.publish(f"BM/STATUS/{compo}", '1',retain=True)
-                    
-            else :  # se non e' la pompa indicata in consegna ed e' accesa, la spengo
-                # - aggiorno lo stato e il tempo di lavoro
-                #upd_status(compo,"0")
-                if status == '1':
-                    board.digital[int(pin)].write(0)
-                    print("aggiorno lo stato ... ",compo)
-                    client.publish(f"BM/STATUS/{compo}", '0',retain=True)
-
-    elif consegna[1:2]  == "9"  :   # automatico ( orario + temperatura ) da controllo gruppo
-
-        # verifico se selezionata  alternanza
-        if consegna == '99' : # automatico con alternanza
-            pass
-        else :    
-            for compo in  pompe :
+         
+            for compo in pompe  :
                 # leggo i dati della pompa
-                print("pompa in elab... ",compo)
-                pin = valori[f"BM/PIN/{compo}"]
-                print("pin... ",pin)
-                status = valori[f"BM/STATUS/{compo}"]
-                print("status... ",status)
+                #print("pompa in elab... 1",compo)
+                
+                stringa = f"BM/PIN/{compo}"
+                pin = valori[str(stringa)]
+                #print("pin... ",pin)
+                stringa = f"BM/STATUS/{compo}"
+                status = valori[str(stringa)]
+                #print("status... ",status)
+                
+                logging.debug(" Pompa in elaborazione : "+compo)
+                logging.debug(" Pin                   : "+pin)
+                logging.debug(" Status                : "+status)
+                logging.debug(" Consegna              : "+consegna)
 
-                if consegna_grp == True :  # check gruppo = acceso
-                    if consegna[0:1] == compo[-1:] : # sono sulla pompa indicata in consegna
-                        # - aggiorno lo stato e il tempo di lavoro
-                        #upd_status(compo,"1")
-                        if status == '0':
-                            board.digital[int(pin)].write(1)
-                            print("aggiorno lo stato ... ",compo)
-                            client.publish(f"BM/STATUS/{compo}", '1',retain=True)
+
+                if status == '1':
+                    #print("spengo la pompa ... ",compo)
+                    try :
+                        #board.digital[int(pin)].write(0)
+                        send_socket(f"DO;{str(pin)};0")
+                        logging.debug(" Aggiorno Arduino ------: PIN "+str(pin)+" - 0")
+
+                    except :
+                        logging.critical(" Errore comunicazione Arduino",exc_info=True)
                         
-                    else :  # se non e' la pompa indicata in consegna ed e' accesa, la spengo
-                        # - aggiorno lo stato 
-                        #upd_status(compo,"0")
-                        if status == '1':
-                            board.digital[int(pin)].write(0)
-                            print("aggiorno lo stato ... ",compo)
-                            client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                    #print("aggiorno lo stato ... ",compo)
+                    #client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                    self.ritorno[f"BM/STATUS/{compo}"] = '0'
 
-                if consegna_grp == False :  # check gruppo = spento
-                    # - aggiorno lo stato 
+
+        elif consegna[1:2]  == "1"  : # marcha solo la pompa indicata
+            #logging.debug(" Consegna 11 o 21 -")
+
+            
+            for compo in  pompe :
+
+                # leggo i dati della pompa
+                #print("pompa in elab...2 ",compo)
+                pin = valori[f"BM/PIN/{compo}"]
+                #print("pin... ",pin)
+                status = valori[f"BM/STATUS/{compo}"]
+                #print("status... ",status)
+                #print("consegna... ",consegna[0:1])
+                #print("compo... ",compo[-1:])
+                
+                logging.debug(" Pompa in elaborazione : "+compo)
+                logging.debug(" Pin                   : "+pin)
+                logging.debug(" Status                : "+status)
+                logging.debug(" Consegna              : "+consegna)
+
+
+
+            
+                if consegna[0:1] == compo[-1:] : # sono sulla pompa indicata in consegna
+                    #upd_status(compo,"1")
+                    if status == '0':
+                        try:
+                            #board.digital[int(pin)].write(1)
+                            
+                            send_socket(f"DO;{str(pin)};1")
+                            logging.debug(f" Aggiorno Arduino - {compo} ---: PIN "+str(pin)+" - 1")
+
+                        except:
+                            logging.critical(" Errore comunicazione Arduino",exc_info=True)
+
+                        #print("aggiorno lo stato ... ",compo)
+                        #client.publish(f"BM/STATUS/{compo}", '1',retain=True)
+                        self.ritorno[f"BM/STATUS/{compo}"] = '1'
+                        logging.debug(f" aggiorno lo stato -  BM/STATUS/{compo}    = 1" )
+
+
+                        
+                else :  # se non e' la pompa indicata in consegna ed e' accesa, la spengo
+                    # - aggiorno lo stato e il tempo di lavoro
                     #upd_status(compo,"0")
                     if status == '1':
-                            board.digital[int(pin)].write(0)
-                            print("aggiorno lo stato ... ",compo)
-                            client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                        try:
+                            send_socket(f"DO;{str(pin)};0")
+                            #board.digital[int(pin)].write(0)
+                            logging.debug(f" Aggiorno Arduino - {compo} ---: PIN "+str(pin)+" - 0")
+
+
+                        except:
+                            logging.critical(" Errore comunicazione Arduino",exc_info=True)
+
+                        #print("aggiorno lo stato ... ",compo)
+                        #client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                        self.ritorno[f"BM/STATUS/{compo}"] = '0'
+                        logging.debug(f" aggiorno lo stato -  BM/STATUS/{compo}    = 0" )
 
 
 
+        elif consegna[1:2]  == "9"  :   # automatico ( orario + temperatura ) da controllo gruppo
+
+            # verifico se selezionata  alternanza
+            if consegna == '99' : # automatico con alternanza
+                pass
+            else :    
+                for compo in  pompe :
+
+                    # leggo i dati della pompa
+                    #print("pompa in elab... 3",compo)
+                    pin = valori[f"BM/PIN/{compo}"]
+                    #print("pin... ",pin)
+                    status = valori[f"BM/STATUS/{compo}"]
+                    #print("status... ",status)
+                    #print("consegna... ",consegna)
+                    #print("compo... ",compo)
+
+                    #print("consegna_grp... ",str(consegna_grp))
+                    
+                    logging.debug(" Pompa in elaborazione : "+compo)
+                    logging.debug(" Pin                   : "+pin)
+                    logging.debug(" Status                : "+status)
+                    logging.debug(" Consegna              : "+consegna)
+
+                    if consegna_grp == True :  # check gruppo = acceso
+                        if consegna[0:1] == compo[-1:] : # sono sulla pompa indicata in consegna
+                            # - aggiorno lo stato e il tempo di lavoro
+                            if status == '0':
+                                try:
+                                    #board.digital[int(pin)].write(1)
+                                    send_socket(f"DO;{str(pin)};1")
+
+                                    logging.debug(" Aggiorno Arduino ------: PIN "+str(pin)+" - 1")
+
+                                except:
+                                    logging.critical(" Errore comunicazione Arduino",exc_info=True)
+
+                                #client.publish(f"BM/STATUS/{compo}", '1',retain=True)
+                                logging.debug(f" aggiorno lo stato -  BM/STATUS/{compo}    = 1" )
+
+                                self.ritorno[f"BM/STATUS/{compo}"] = '1'
+
+                            
+                        else :  # se non e' la pompa indicata in consegna ed e' accesa, la spengo
+                            # - aggiorno lo stato 
+                            
+                            if status == '1':
+                                
+                                try:
+                                    #board.digital[int(pin)].write(0)
+                                    send_socket(f"DO;{str(pin)};0")
+
+                                    logging.debug(" Aggiorno Arduino ------: PIN "+str(pin)+" - 0")
+
+                                except:
+                                    logging.critical(" Errore comunicazione Arduino",exc_info=True)
+
+                                #client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                                logging.debug(f" aggiorno lo stato -  BM/STATUS/{compo}    = 0" )
+
+                                self.ritorno[f"BM/STATUS/{compo}"] = '0'
 
 
-# alla prima chiamata resetto il pin arduino -----------------------------------
-def set_pin(board):
-    pin  = get_settings('pin')
-    status  = get_settings('status')
-    print("--------- sono in set pin --------------- ", str(pin)," ",str(status))
+                    if consegna_grp == False :  # check gruppo = spento
+                        
+                        # - aggiorno lo stato 
+                        if status == '1':
+                            try:
+                                #board.digital[int(pin)].write(0)
+                                send_socket(f"DO;{str(pin)};0")
 
-    board.digital[int(pin)].write(int(status))
+                                logging.debug(" Aggiorno Arduino ------: PIN "+str(pin)+" - 0")
 
-    print("esco da set pin")
-    return
+                            except:
+                                logging.critical(" Errore comunicazione Arduino",exc_info=True)
+
+                            #print("aggiorno lo stato ... ",compo)
+                            #client.publish(f"BM/STATUS/{compo}", '0',retain=True)
+                            logging.debug(f" aggiorno lo stato -  BM/STATUS/{compo}    = 0" )
+
+                            self.ritorno[f"BM/STATUS/{compo}"] = '0'
+
+        #print("-----------   FINE  CHECK CONSEGNA BM -------")
+        return self.ritorno
+
+
+    def clear_ritorno(self):
+        #print("---------clear retorno --------")
+        self.ritorno = {}
+        #print(self.ritorno)
+        #print("---------clear retorno ---fineeeeee-----")
+        
+    #####------------------------------------------------------------------
+    def sincro(self,pumps,valori_BM) :
+    
+        for pump in pumps :
+                       
+            status = valori_BM[f"BM/STATUS/{pump[0]}"]
+            pin    = valori_BM[f"BM/PIN/{pump[0]}"]
+                        
+            send_socket(f"DO;{pin};{status}")
+            
 
 
 # aggiorna il tempo di lavoro dei componenti attivi  -------------------------
 def upd_timestamp(timestamp,client) :
 
-    print("------   Upd timestamp ------------------")
+    #print("------   Upd timestamp ------------------")
 
-    for compo in pompe  :
+    pass
+
+    """ for compo in pompe  :
         # leggo i dati della pompa
         print("pompa in elab... ",compo)
         status = valori[f"BM/STATUS/{compo}"]
@@ -360,4 +292,35 @@ def upd_timestamp(timestamp,client) :
 
         if status == "1" :
             client.publish(f"BM/JOB/TIME/{compo}", str(lavoro),retain=True)
+         """
+# ----------------------------------------------------------------------------
+def send_socket(stringa) :
+    
+    #print("----------  SEND SOCKET -------")
+    #print(stringa)
+    
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        s.sendall(stringa.encode())
+    
+    return
+#-------------------------------------------------------------------------
+
         
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

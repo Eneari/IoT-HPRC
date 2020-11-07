@@ -22,10 +22,17 @@
 #  
 #  
 import logging
-logger = logging.getLogger(__name__)
 
-##logging.basicConfig(filename='Ardupython.log',  format='%(name)s - %(levelname)s - %(message)s')
-#logging.basicConfig(filename='example.log',level=logging.DEBUG)
+import traceback
+
+logger = logging.getLogger("Main")
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler('./log/Main.log')
+fh.setLevel(logging.DEBUG)
+
+logger.addHandler(fh)
+
 
 from lib import Vm
 from lib import Gr
@@ -34,47 +41,64 @@ import time
 
 import paho.mqtt.client as mqtt #import the client
 
+from multiprocessing import Process
+#import multiprocessing as mp
+
 import sqlite3
 conn = sqlite3.connect(utils.getConfig('Sqlitedb','dbfile'),timeout=30.0)
 
 
 MAX_TIME = 60  # costante aggiornamento clock
 
-# --- connetto arduino a firmata ---
-board = utils.getArduino(utils.getConfig('Arduino','vid'),utils.getConfig('Arduino','pid'))
-#board = ""
-
 
 def main():
-   
+       
     # ---leggo tutte le valvole presenti
-    query = "SELECT codice FROM apparati WHERE tipo = 'VT' "
+    query = "SELECT codice FROM apparati WHERE tipo = 'VT' and active = 1"
     c = conn.cursor()
     c.execute(query)
     valvole = c.fetchall()
     c.close()
 
-    logging.debug(" ELABORO LE VALVOLE-------")
+    logger.debug(" ELABORO LE VALVOLE-------")
         
+    valvola = {}
     for row in  valvole :
-        valvola = Vm.VM(board,f"{row[0]}")
-        valvola.start()
+        #print(" ------------------------ elaboro Valvola : ",str(row[0]))
 
-    print("sono uscito da valvole  ...............")
+        valvola[row[0]] = Process(target=Vm.VM, args=(f"{row[0]}",))
+        valvola[row[0]].start()
+        
+
+    #print("sono uscito da valvole  ...............")
 
     # ---leggo tutti i gruppi presenti
-    query = "SELECT codice FROM groups "
+    query = "SELECT codice , id FROM groups WHERE active = 1 "
     c = conn.cursor()
     c.execute(query)
     gruppi = c.fetchall()
     c.close()
+    gruppo = {}
+    # mp.set_start_method('spawn')    # provare con fork
     for row in  gruppi :
-        gruppo = Gr.GR(board,f"{row[0]}")
-        gruppo.start()#
+        
+        # ---leggo tutti i componenti del gruppo
+        query = f"SELECT componente FROM groups_component WHERE group_id = {row[1]}"
+        c = conn.cursor()
+        c.execute(query)
+        pumps = c.fetchall()
+        c.close()
+        
+        #print(" ------------------------ elaboro Gruppo : ",str(row[0]))
+        
+        gruppo[row[0]] = Process(target=Gr.GR, args=(f"{row[0]}",pumps,))
+                
+        gruppo[row[0]].start()   #
+        
 
         # time.sleep(.2)
 
-    print("sono uscito da gruppi  ...............")
+    #print("sono uscito da gruppi  ...............")
 
     
     # Loop infinito per inviare il clock a intervalli di tempo
@@ -85,39 +109,35 @@ def main():
 
 
     while True:
-
+               
         timestamp = int(time.time())  # Unix time in seconds
 
-        """ print("-----------------------------------")
-        print("timestamp   ", str(timestamp))
-        print("old_time    ", str(old_time))
-        print("MAX_TIME    ", str(MAX_TIME))
-        print("-----------------------------------") """
-
-
         if timestamp > ( MAX_TIME + old_time ) : 
-            
-            
+            #print("-----------------------------------")
+            #print("timestamp   ", str(timestamp))
+            #print("old_time    ", str(old_time))
+            #print("MAX_TIME    ", str(MAX_TIME))
+            #print("-----------------------------------") 
+                
+                
             # attivo il client MQTT
-            print("creating new instance")
+            #print("creating new instance")
 
             client = mqtt.Client(transport="websockets") #create new instance
 
-            print("connecting to broker")
+     #       print("connecting to broker")
             #logging.info("connecting to broker ........ ")
             client.connect("localhost",8080) 
 
             old_time = timestamp
-            print(" aggiorno timestamp......... ",str(timestamp))
+            #rint(" aggiorno timestamp......... ",str(timestamp))
             client.publish("TIMESTAMP", str(timestamp),retain=True)
             client.disconnect()
 
 
         time.sleep(10)
     
-    
-    
-    
+     
 
 if __name__ == '__main__':
     main()

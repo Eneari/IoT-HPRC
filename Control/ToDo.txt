@@ -1,0 +1,2 @@
+- Uniformare e ristrutturare il db con la parte WEB ??
+- Risolvere il problema del config_ini in lib
