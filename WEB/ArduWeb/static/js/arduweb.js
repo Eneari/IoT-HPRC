@@ -174,6 +174,17 @@ function Fill(componente,valore,target,tipo){
     //window.console.log(componente+valore+target+tipo+tipo_campo)
         
     switch(tipo_campo) {
+        case "TSTAMP":  
+
+            dateObj = new Date(valore * 1000); 
+            utcString = dateObj.toUTCString(); 
+            //time = utcString.slice(-11, -4); 
+            time = utcString.slice(-25, -4); 
+        
+            //var val = Number(valore);
+            target.innerHTML = time ;
+    
+            break;
         case "TEMP":  
             var val = Number(valore);
             target.innerHTML = val.toFixed(2) + "  C°";

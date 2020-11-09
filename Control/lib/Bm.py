@@ -30,7 +30,8 @@ first_time = {}
 class BM():
     
     
-    ritorno = {}
+    ritorno  = {}
+    ritorno1 = {}
 
 
     def __init__(self,gruppo):
@@ -38,7 +39,7 @@ class BM():
         
         
         LOG_FILENAME = './log/GR-'+self.gruppo+'.log'
-        #logger = logging.getLogger(self.gruppo)
+        logger = logging.getLogger(self.gruppo)
         #logging.basicConfig(filename=LOG_FILENAME,  
          #                   format='%(name)s - %(levelname)s - %(message)s)%(filename)s:%(lineno)s ' )
         
@@ -268,31 +269,31 @@ class BM():
             
 
 
-# aggiorna il tempo di lavoro dei componenti attivi  -------------------------
-def upd_timestamp(timestamp,client) :
+    # aggiorna il tempo di lavoro dei componenti attivi  -------------------------
+    def upd_timestamp(self,pumps,timestamp,valori) :
 
-    #print("------   Upd timestamp ------------------")
+        #print("------   Upd timestamp ------------------")
 
-    pass
+        for compo in pumps  :
+            # leggo i dati della pompa
+            #print("pompa in elab... ",compo[0])
+            status = valori[f"BM/STATUS/{compo[0]}"]
+            #print("status... ",status)
+            job_start = valori.get(f"BM/JOB/START/{compo[0]}",0)
+            
+            #print("job_start... ",job_start)
+            job_time = valori.get(f"BM/JOB/TIME/{compo[0]}",0)
+            #print("job_time... ",job_time)
 
-    """ for compo in pompe  :
-        # leggo i dati della pompa
-        print("pompa in elab... ",compo)
-        status = valori[f"BM/STATUS/{compo}"]
-        print("status... ",status)
+            lavoro = float(job_time) + float(timestamp) - float(job_start)
+            
 
-        job_start = valori[f"BM/JOB/START/{compo}"]
-        #print("job_start... ",job_start)
-        job_time = valori[f"BM/JOB/TIME/{compo}"]
-        #print("job_time... ",job_time)
+            self.ritorno1[f"BM/JOB/START/{compo[0]}"] = str(timestamp)
 
-        lavoro = float(job_time) + float(timestamp) - float(job_start)
-
-        client.publish(f"BM/JOB/START/{compo}", str(timestamp),retain=True)
-
-        if status == "1" :
-            client.publish(f"BM/JOB/TIME/{compo}", str(lavoro),retain=True)
-         """
+            if status == "1" :
+                self.ritorno1[f"BM/JOB/TIME/{compo[0]}"] = str(lavoro)
+            
+        return self.ritorno1
 # ----------------------------------------------------------------------------
 def send_socket(stringa) :
     

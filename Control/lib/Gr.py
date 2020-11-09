@@ -35,13 +35,15 @@ buffer = {}
 valori_GR = {}
 valori_BM = {}
 
+chk_time = False
 
 
 #-------------------------------------------------------------------------
 class GR():
     
     first_time = True
-
+    
+   
     def __init__(self,gruppo,pumps):
 
         self.gruppo = gruppo
@@ -129,6 +131,8 @@ class GR():
             
         if (message.topic=="TIMESTAMP" ):
             #print("ho ricevuto un timestamp")
+            global chk_time
+            chk_time = True
             GR_chk = True
             
 
@@ -281,7 +285,7 @@ def read_settings_GR(gruppo):
     #   print("sonda temp  non inserito")
     buffer['sonda_t']= sonda_t
 
-     # leggo la  temperatura della sonda se esiste----------------------------
+    # leggo la  temperatura della sonda se esiste----------------------------
     temperatura = None
     sonda_t  = get_settings('sonda_t')
     if sonda_t :
@@ -301,6 +305,12 @@ def read_settings_GR(gruppo):
             errore = True
             
     buffer['temperatura']= temperatura
+    
+    # leggo il timestamp del clock----------------------------------
+    timestamp = valori_GR.get("TIMESTAMP",None)
+    buffer['timestamp']= timestamp
+    
+    
 
     return errore 
     
@@ -360,6 +370,8 @@ def chk_consegna_GR(oggio,gruppo,pumps,client) :
     #from lib import utils
     #from lib import messages
     import time
+    
+    global chk_time
 
 #       consegna :	consegna del componente
 #	time_on :	orario di accensione del componente
@@ -379,6 +391,8 @@ def chk_consegna_GR(oggio,gruppo,pumps,client) :
     sonda_t   = get_settings('sonda_t')
     temperatura  = get_settings('temperatura')
     consegna_set_point  = get_settings('consegna_set_point')
+    timestamp  = get_settings('timestamp')
+
 
 
     chk_consegna  = True
@@ -492,6 +506,22 @@ def chk_consegna_GR(oggio,gruppo,pumps,client) :
         traceback.print_exc()
         
         raise
+        
+    # se arrivato un clock, aggiorno i tempi di lavoro delle pompe
+    if chk_time :
+        try:
+            ritorno1 = oggio.upd_timestamp( pumps,timestamp,valori_BM)
+            chk_time = False
+        except:
+            logging.error("errore in chiamata upd_timestamp")
+            traceback.print_exc()
+            raise
+            
+        for message in ritorno1 :
+            #print(message,ritorno1[message])        
+            client.publish(message, ritorno1[message],retain=True)
+        oggio.ritorno1 = {}
+
 
     #print("------------MESSAGGI DA PUBBLICARE -----------")
 
