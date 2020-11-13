@@ -160,16 +160,13 @@ def main():
 #------------------------------------------------------------
 def on_message(client, userdata, message):
     
-    #print("---------------------------  ON MESSAGE ----------__")
         
     global timestamp_old
         
     #print("message received " ,message.topic,"  ",str(message.payload.decode("utf-8")))
         
     timestamp_old = int(message.payload.decode("utf-8"))
-     
-     
-     
+    
      
         
 
