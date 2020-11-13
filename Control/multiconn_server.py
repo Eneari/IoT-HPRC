@@ -19,7 +19,7 @@ def accept_wrapper(sock):
     print("accepted connection from", addr)
     conn.setblocking(False)
     data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
-    events = selectors.EVENT_READ | selectors.EVENT_WRITE
+    events = selectors.EVENT_READ           # | selectors.EVENT_WRITE
     sel.register(conn, events, data=data)
 
 
@@ -38,11 +38,11 @@ def service_connection(key, mask):
         if data.outb:
             send_message(data.outb)
            
-    if mask & selectors.EVENT_WRITE:
-        if data.outb:
-            print("echoing", repr(data.outb), "to", data.addr)
-            sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
+    #if mask & selectors.EVENT_WRITE:
+    #    if data.outb:
+    #        print("echoing", repr(data.outb), "to", data.addr)
+    #        sent = sock.send(data.outb)  # Should be ready to write
+    #        data.outb = data.outb[sent:]
             
 ##------------------------------------------------------------------            
             
@@ -96,7 +96,7 @@ try:
             else:
                 service_connection(key, mask)
                 
-        time.sleep(0.2)        
+        time.sleep(.2)
                 
                 
 except KeyboardInterrupt:

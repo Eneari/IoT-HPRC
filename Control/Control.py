@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3.9
 # -*- coding: utf-8 -*-
 #
 #  Arducontrol.py
@@ -49,6 +49,8 @@ conn = sqlite3.connect(utils.getConfig('Sqlitedb','dbfile'),timeout=30.0)
 
 
 MAX_TIME = 60  # costante aggiornamento clock
+
+timestamp_old = 0
 
 
 def main():
@@ -111,33 +113,65 @@ def main():
     while True:
                
         timestamp = int(time.time())  # Unix time in seconds
+        
 
         if timestamp > ( MAX_TIME + old_time ) : 
-            #print("-----------------------------------")
-            #print("timestamp   ", str(timestamp))
-            #print("old_time    ", str(old_time))
-            #print("MAX_TIME    ", str(MAX_TIME))
-            #print("-----------------------------------") 
-                
-                
+            
+            # recupero il timestamp precedente --------------
             # attivo il client MQTT
             #print("creating new instance")
 
             client = mqtt.Client(transport="websockets") #create new instance
+            client.on_message=on_message #attach function to callback
 
-     #       print("connecting to broker")
+            #print("connecting to broker")
             #logging.info("connecting to broker ........ ")
             client.connect("localhost",8080) 
+            client.subscribe("TIMESTAMP"),
+            
+            while True :
 
+                client.loop_start()
+        
+                time.sleep(2)
+                #client.loop_stop()
+                break
+            
+            delta_time = timestamp - timestamp_old
+            
+            #print("-----------------------------------")
+            #print("timestamp        ", str(timestamp))
+            #print("timestamp_old    ", str(timestamp_old))
+            #print("delta_time       ", str(delta_time))
+            #print("-----------------------------------") 
+            
+            
             old_time = timestamp
-            #rint(" aggiorno timestamp......... ",str(timestamp))
+            
+            #print(" aggiorno timestamp......... ",str(timestamp))
             client.publish("TIMESTAMP", str(timestamp),retain=True)
+            client.publish("DELTA-TIME", str(delta_time),retain=True)
+
             client.disconnect()
 
 
-        time.sleep(10)
+        time.sleep(2)
     
+#------------------------------------------------------------
+def on_message(client, userdata, message):
+    
+    #print("---------------------------  ON MESSAGE ----------__")
+        
+    global timestamp_old
+        
+    #print("message received " ,message.topic,"  ",str(message.payload.decode("utf-8")))
+        
+    timestamp_old = int(message.payload.decode("utf-8"))
      
+     
+     
+     
+        
 
 if __name__ == '__main__':
     main()

@@ -22,6 +22,7 @@
 ##
 import paho.mqtt.client as mqtt #import the client
 import logging
+import logging.handlers
 
 import traceback
 # ------------------------------------------------------------------------
@@ -38,10 +39,13 @@ valori_BM = {}
 chk_time = False
 
 
+
+
 #-------------------------------------------------------------------------
 class GR():
     
     first_time = True
+    delta_time = 0
     
    
     def __init__(self,gruppo,pumps):
@@ -52,17 +56,23 @@ class GR():
         # creo l'oggetto pompe -------------------------------
         self.oggio = Bm.BM(gruppo)
         
-        #def run(self):
-        #LOG_FILENAME = './log/GR-'+self.gruppo+'.log'
-        LOG_FILENAME = './log/GR.log'
-        logger = logging.getLogger(self.gruppo)
-
         
+        LOG_FILENAME = './log/GR-'+self.gruppo+'.log'
 
-        logging.basicConfig(filename=LOG_FILENAME,
-                            format=' %(levelname)s - %(filename)s:%(lineno)s  - %(asctime)s - %(message)s  -%(processName)s',
-                            level=logging.DEBUG,
-                            )
+        # Set up a specific logger with our desired output level
+        global gr_logger
+        gr_logger = logging.getLogger('GRLogger')
+        gr_logger.setLevel(logging.DEBUG)
+
+        # Add the log message handler to the logger
+        handler = logging.handlers.RotatingFileHandler(
+                      LOG_FILENAME, maxBytes=1000000, backupCount=5)
+                      
+        f = logging.Formatter(' %(levelname)s - %(filename)s:%(lineno)s  - %(asctime)s - %(message)s  -%(processName)s')
+
+        handler.setFormatter(f)
+        gr_logger.addHandler(handler)
+
 
 
         client = mqtt.Client(transport="websockets") #create new instance
@@ -73,9 +83,9 @@ class GR():
 
         #print("connecting to broker")
                 
-        logging.info("--------  ELABORO GRUPPO ........ "+self.gruppo)
+        gr_logger.info("--------  ELABORO GRUPPO ........ "+self.gruppo)
         
-        logging.info("connecting to broker ........ ")
+        gr_logger.info("connecting to broker ........ ")
         client.connect("localhost",8080) 
 
         result = client.subscribe([("GR/CONS/"+self.gruppo,0),
@@ -84,11 +94,11 @@ class GR():
                             ("GR/CONS/SP/"+self.gruppo,0),
                             ("GR/ALM/ON/"+self.gruppo,0),
                             ("GR/ALM/OFF/"+self.gruppo,0),
-                            ("TIMESTAMP",0)
+                            ("DELTA-TIME",0)
                             ])
                             
-        logging.info("subscribe result ...1..... ")
-        logging.info(result)
+        gr_logger.info("subscribe result ...1..... ")
+        gr_logger.info(result)
         # Sottoscrivo i messaggi delle pompe del gruppo  ----
         for pump in self.pumps :
             
@@ -96,10 +106,13 @@ class GR():
                             ("BM/JOB/START/"+pump[0],0),
                             ("BM/JOB/TIME/"+pump[0],0),
                             ("BM/PIN/"+pump[0],0),
+                            ("BM/JOB/ALT/TIME/"+pump[0],0),
+                            ("BM/JOB/ALT/SET/"+pump[0],0),
+
                             ])
                             
-        logging.info("subscribe result ...2..... ")
-        logging.info(result)
+        gr_logger.info("subscribe result ...2..... ")
+        gr_logger.info(result)
 
         while True :
 
@@ -119,7 +132,7 @@ class GR():
         
         stringa = str(message.payload.decode("utf-8"))
         
-        logging.debug("message received " +message.topic+"  "+stringa )
+        gr_logger.debug("message received " +message.topic+"  "+stringa )
         
         if (message.topic[:2] == "BM" )  :
             valori_BM[message.topic] = stringa
@@ -129,8 +142,11 @@ class GR():
             GR_chk = True
             
             
-        if (message.topic=="TIMESTAMP" ):
+        if (message.topic=="DELTA-TIME" ):
             #print("ho ricevuto un timestamp")
+            
+            self.delta_time = int(stringa)
+            
             global chk_time
             chk_time = True
             GR_chk = True
@@ -149,7 +165,7 @@ class GR():
                     self.oggio.sincro(self.pumps,valori_BM)
                     self.first_time = False
                 except:
-                    logging.error(" Errore chiamata sincro ",exc_info=True)
+                    gr_logger.error(" Errore chiamata sincro ",exc_info=True)
                     traceback.print_exc()
 
                     raise
@@ -165,7 +181,7 @@ class GR():
                 try:
                     error_GR = read_settings_GR(self.gruppo)
                 except:
-                    logging.error("errore in error GR",exc_info=True)
+                    gr_logger.error("errore in error GR",exc_info=True)
                     traceback.print_exc()
                     raise
                     
@@ -173,27 +189,27 @@ class GR():
                     try:
                         error_BM = read_settings_BM(self.pumps) 
                     except:
-                        logging.error("errore in read_settings BM",exc_info=True)
+                        gr_logger.error("errore in read_settings BM",exc_info=True)
                         traceback.print_exc()
                         raise
                         
             except:
-                logging.error("errore in read_settings nel Gruppo :" + self.gruppo)
+                gr_logger.error("errore in read_settings nel Gruppo :" + self.gruppo)
                 traceback.print_exc()
                 raise
           
             if not error_GR and not error_BM :                    
                 try:
-                    chk_consegna_GR(self.oggio,self.gruppo,self.pumps,client)
+                    chk_consegna_GR(self.oggio,self.gruppo,self.pumps,client,self.delta_time)
                 except:
-                    logging.error("errore in chk_consegna GR nel Gruppo :" +self.gruppo)
+                    gr_logger.error("errore in chk_consegna GR nel Gruppo :" +self.gruppo)
                     traceback.print_exc()
                     raise
         
     #------------------------------
     def on_connect(self,client, userdata, flags, rc):
         #print("connected.........")
-        logging.debug("connected.........")
+        gr_logger.debug("connected.........")
 
     
     
@@ -297,7 +313,7 @@ def read_settings_GR(gruppo):
             try:
                 temperatura = float(temperatura)
             except ValueError:
-                logging.error("temperatura non ammessa : "+temperatura)
+                gr_logger.error("temperatura non ammessa : "+temperatura)
                 temperatura = None
                 errore = True
         else :
@@ -365,7 +381,7 @@ def get_settings(var):
         return None
 
 # ----------------------------------------------------------------------------
-def chk_consegna_GR(oggio,gruppo,pumps,client) :
+def chk_consegna_GR(oggio,gruppo,pumps,client,delta_time) :
 
     #from lib import utils
     #from lib import messages
@@ -408,14 +424,14 @@ def chk_consegna_GR(oggio,gruppo,pumps,client) :
     #print("sonda_t ---- ",sonda_t)
     #print("consegna_set_point ---- ",consegna_set_point)
 
-    #logging.info("status ------  : "+status)
-    logging.info("consegna ----  : "+consegna)
-    logging.info("time on  ----  : "+time_on)
-    logging.info("time off ----  : "+time_off)
-    logging.info("set point ---  : "+str(set_point))
-    logging.info("consegna sp -  : "+consegna_set_point)
-    logging.info("sonda t  ----  : "+sonda_t)
-    logging.info("temperatura -  : "+str(temperatura))
+    #gr_logger.info("status ------  : "+status)
+    gr_logger.info("consegna ----  : "+consegna)
+    gr_logger.info("time on  ----  : "+time_on)
+    gr_logger.info("time off ----  : "+time_off)
+    gr_logger.info("set point ---  : "+str(set_point))
+    gr_logger.info("consegna sp -  : "+consegna_set_point)
+    gr_logger.info("sonda t  ----  : "+sonda_t)
+    gr_logger.info("temperatura -  : "+str(temperatura))
 
     
     
@@ -496,45 +512,47 @@ def chk_consegna_GR(oggio,gruppo,pumps,client) :
 
     #print("------------ PARAMETRI CHIAMATA chk_consegna_BM ---FINEEEEEEE")
   
-    
+    # se arrivato un clock, aggiorno i tempi di lavoro delle pompe
+    if chk_time :
+        if consegna == "99" :
+            alternanza = True
+        else:
+            alternanza = False
+            
+        try:
+            oggio.upd_timestamp( pumps,delta_time,valori_BM,alternanza)
+            chk_time = False
+        except:
+            gr_logger.error("errore in chiamata upd_timestamp")
+            traceback.print_exc()
+            raise
+            
+
    
-    
+    # eseguo i controlli sulle pompe del gruppo-----------------------
     try:
-        ritorno = oggio.chk_consegna_BM( gruppo,consegna,consegna_grp,pumps,valori_BM)
+        oggio.chk_consegna_BM( gruppo,consegna,consegna_grp,pumps,valori_BM)
     except:
-        logging.error("errore in chiamata chk_consegna_BM")
+        gr_logger.error("errore in chiamata chk_consegna_BM")
         traceback.print_exc()
         
         raise
         
-    # se arrivato un clock, aggiorno i tempi di lavoro delle pompe
-    if chk_time :
-        try:
-            ritorno1 = oggio.upd_timestamp( pumps,timestamp,valori_BM)
-            chk_time = False
-        except:
-            logging.error("errore in chiamata upd_timestamp")
-            traceback.print_exc()
-            raise
-            
-        for message in ritorno1 :
-            #print(message,ritorno1[message])        
-            client.publish(message, ritorno1[message],retain=True)
-        oggio.ritorno1 = {}
-
-
+    
     #print("------------MESSAGGI DA PUBBLICARE -----------")
+    
+    ritorno = oggio.ritorno
+    #print(ritorno)
 
-    for message in ritorno :
-        #print(message,ritorno[message])
-        
-        # memorizzo il messaggio per non processarlo nuovamente
-        #messages_sends[message] = ritorno[message]
-        
-        client.publish(message, ritorno[message],retain=True)
-        
-    # ripulisco
-    oggio.clear_ritorno()
+    if ritorno :
+        for message in ritorno :
+            #print(message,ritorno[message])
+                       
+            
+            client.publish(message, ritorno[message],retain=True)
+            
+        # ripulisco
+        oggio.clear_ritorno()
     
            
 # -------------------------------------------------------------------------------

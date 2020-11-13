@@ -191,8 +191,8 @@ function Fill(componente,valore,target,tipo){
     
             break;
         case "JOB":  
-            var val = Number(valore / 60);
-            target.innerHTML = val.toFixed(2) + " min.";
+            var val = Number(valore / 60 /60);
+            target.innerHTML = val.toFixed(2) + " H.";
     
             break;
             
