@@ -1,7 +1,7 @@
-# IoT-HPRC
-IoT hotel  plant room control
+# Open-HAS
+Open Source Hotel Automation System over IoT
 
-Sistema de Control de Sala de maquinas para Hoteles en Internet de las Cosas
+Sistema de Automation  Salas de maquinas para Hoteles en Internet de las Cosas
 
 La evolución actual de los microcontroladores permite el uso de componentes de bajo costo con características muy similares a las computadoras  reales, donde se pueden usar método de desarrollo que están muy cerca del sector de TI en general.
 
