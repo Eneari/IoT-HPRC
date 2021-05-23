@@ -5,10 +5,10 @@ var hostname = "localhost";
 var port = 8080;
 //var clientId = "ArduWeb";
 var clientId = "clientID-" + parseInt(Math.random() * 100);
-clientId += new Date().getUTCMilliseconds();
+//clientId += new Date().getUTCMilliseconds();
 var username = "";
 var password = "";
-var decod=Object;
+//var decod=Object;
 
 
 var codici = [];
@@ -22,44 +22,42 @@ var sonda_descrizione = [];
 
 
 
-window.console.log("INIZIALIZZOOOOO");
-
 var origin   = window.location.origin;   // Returns base URL (https://example.com)
 
 // carico la tabella di decodifica
-window.console.log("punto 1");
 //--------------------------------------------
+$.ajaxSetup({
+async: false
+});
 $.get( origin+"/get_decod" , function( result ) {
 
-    decod = JSON.parse(result);
-    window.console.log("punto 2");
+    //window.console.log(result);
+
+    //decod = JSON.parse(result);
+    var decod = result;
     
-     for (var y = 0; y < decod.items.length; y++) {
+    
+     for (var y = 0; y < decod.length; y++) {
          
-        dec_codice[y] = decod.items[y].codice;  
-        dec_valore[y] = decod.items[y].valore;
-        dec_descrizione[y] = decod.items[y].descrizione; 
+        dec_codice[y] = decod[y].codice;  
+        dec_valore[y] = decod[y].valore;
+        dec_descrizione[y] = decod[y].descrizione; 
     }             
-    window.console.log("punto 3");
-    window.console.log("DECODIFICA");
-    window.console.log(dec_codice);
+    
               
 });
 // carico la lista delle sonde
 //--------------------------------------------
+
 $.get( origin+"/get_sonda" , function( result ) {
 
-    decod = JSON.parse(result);
+    decod =result;
     
-     for (var y = 0; y < decod.items.length; y++) {
+     for (var y = 0; y < decod.length; y++) {
          
-        sonda_codice[y] = decod.items[y].codice;  
-        sonda_descrizione[y] = decod.items[y].descrizione; 
+        sonda_codice[y] = decod[y].codice;  
+        sonda_descrizione[y] = decod[y].descrizione; 
     }   
-    
-    window.console.log("SONDE");
-    window.console.log(sonda_codice+"  "+sonda_descrizione);
-
               
 });
 
@@ -78,12 +76,11 @@ Connect();
 /*Initiates a connection to the MQTT broker*/
 function Connect(){
     window.console.log("----sono in connect -------");
-    
 
     mqttClient.connect({
         onSuccess: Connected,
         onFailure: ConnectionFailed,
-        keepAliveInterval: 60
+        keepAliveInterval: 120 //60
         
     });
 }
@@ -93,7 +90,7 @@ function Connected() {
   window.console.log("Connected");
  
   
-    mqttClient.subscribe('#');
+  mqttClient.subscribe('#');
 }
 
 /*Callback for failed connection*/
@@ -107,7 +104,7 @@ function ConnectionLost(res) {
   if (res.errorCode !== 0) {
     window.console.log("Connection lost:" + res.errorMessage);
 
-    Connect();
+   Connect();
   }
 }
 
@@ -172,6 +169,23 @@ function Fill(componente,valore,target,tipo){
     
     //window.console.log(" FILL")
     //window.console.log(componente+valore+target+tipo+tipo_campo)
+    
+    
+    /*
+    if (componente === "ST/VAL/ST01" ){
+      var root = document.getElementById('like_button_container');
+      root.setAttribute('data-valore',valore) ;  
+    
+      
+      console.log("prova root :" + root);   
+      console.log("prova valore :" + valore);   
+      compo = new LikeButton(valore);
+      
+      console.log(compo);
+      
+
+      
+    };  */
         
     switch(tipo_campo) {
         case "TSTAMP":  
@@ -279,20 +293,33 @@ function LookUpDescrizione_old(codice,valore) {
 /*******************************************************************/
 function LookUpDescrizione(codice,valore) { 
 
-    //window.console.log("-----------dentro loockup------------")
-    //window.console.log(dec_codice);
-    
-for (var y = 0; y < dec_codice.length; y++) {
-                   
-    if (dec_codice[y] == codice  &  dec_valore[y] == valore  ){
-        
-        //window.console.log(decod.items[y].descrizione);
-        return dec_descrizione[y];
-        
-    }
-}
+    /*
+    window.console.log("-----------dentro loockup------------")
+    window.console.log(codice);
+    window.console.log(valore);
 
-return "" ;
+
+    window.console.log(dec_codice);
+    window.console.log(dec_valore);
+    */
+
+    var descrizione = '';
+    var trovato = false ;
+    
+    for (let y = 0; y < dec_codice.length; y++) {
+                       
+        if (dec_codice[y] == codice  &  dec_valore[y] == valore  ){
+            trovato = true;
+            descrizione = dec_descrizione[y];
+        }
+    }
+    if (trovato) {
+      return descrizione ;
+    }
+    else {
+      return "" ;
+    }
+
 }
 /**************************************************************/
 function setValore(codice,valore) { 
